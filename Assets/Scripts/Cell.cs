@@ -1,11 +1,10 @@
-using System;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Cell : MonoBehaviour,
     IPointerDownHandler, 
-    //IPointerUpHandler,
     IPointerEnterHandler
 {
     private MouseHold _mouseHoldInstance;
@@ -20,12 +19,9 @@ public class Cell : MonoBehaviour,
     {
         gameObject.GetComponent<Image>().color = _mouseHoldInstance.mouseDownColor;
         _mouseHoldInstance.AddCellToHold(gameObject);
+        int cellNum = int.Parse(Regex.Match(gameObject.name, @"\d+").Value);
+        _mouseHoldInstance.MarkCell(_mouseHoldInstance.Grid, cellNum, "X");
     }
-
-    // public void OnPointerUp (PointerEventData eventData) 
-    // {
-    //     gameObject.GetComponent<Image>().color = _mouseHoldInstance.originalColor;
-    // }
     
     public void OnPointerEnter (PointerEventData eventData) 
     {
@@ -33,6 +29,8 @@ public class Cell : MonoBehaviour,
         {
             gameObject.GetComponent<Image>().color = _mouseHoldInstance.mouseDownColor;
             _mouseHoldInstance.AddCellToHold(gameObject);
+            int cellNum = int.Parse(Regex.Match(gameObject.name, @"\d+").Value);
+            _mouseHoldInstance.MarkCell(_mouseHoldInstance.Grid, cellNum, "X");
         }
     }
 }
