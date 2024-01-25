@@ -10,6 +10,8 @@ public class MouseHold : MonoBehaviour
     [SerializeField] public Color mouseDownColor;
     [SerializeField] public Color originalColor;
     public Stack<GameObject> currentHoldCells = new Stack<GameObject>();
+    public bool turn = true; //True = Red, False = Blue
+    public bool forceColorUpdate = false;
 
     public string[,] Grid = new string[4, 4]
     {
@@ -35,31 +37,16 @@ public class MouseHold : MonoBehaviour
 
     public void AddCellToHold(GameObject cell)
     {
-        if (currentHoldCells.Count == 4)
-        {
-            //Debug.Log("5 cells in hold.");
-            foreach (GameObject cellInstance in currentHoldCells.ToList())
-            {
-                cellInstance.GetComponent<Image>().color = originalColor;
-                currentHoldCells.Pop();
-                //Debug.Log($"{cellInstance.name} popped.");
-            }
-            ResetGrid();
-        }
-        
         currentHoldCells.Push(cell);
-        //Debug.Log($"{cell.name} pushed.");
-    }
-
-    public void ResetGrid()
-    {
-        Grid = new string[4, 4]
+        
+        if (currentHoldCells.Count == 5)
         {
-            { "1", "2", "3", "4" },
-            { "5", "6", "7", "8" },
-            { "9", "10", "11", "12" },
-            { "13", "14", "15", "16" }
-        };
+            // foreach (GameObject cellInstance in currentHoldCells.ToList())
+            // {
+            //     cellInstance.GetComponent<Image>().color = originalColor;
+            //     currentHoldCells.Pop();
+            // }
+        }
     }
 
     public bool MarkCell(string[,] grid, int cellNumToBeChanged, string valueToChangeTo)
@@ -72,7 +59,7 @@ public class MouseHold : MonoBehaviour
                 if (counter == cellNumToBeChanged)
                 {
                     grid[i, j] = valueToChangeTo;
-                    Print2DArray(grid);
+                    //Print2DArray(grid);
                     return true;
                 }
                 counter++;
@@ -104,6 +91,20 @@ public class MouseHold : MonoBehaviour
         }
 
         Debug.Log(sb.ToString());
+    }
+    
+    public void nextTurn()
+    {
+        turn = !turn;
+        forceColorUpdate = true;
+        if (!turn)
+        {
+            mouseDownColor = Color.blue;
+        }
+        else
+        {
+            mouseDownColor = Color.red;
+        }
     }
     
 }
