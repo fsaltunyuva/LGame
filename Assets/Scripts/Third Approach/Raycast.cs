@@ -5,6 +5,7 @@ using UnityEngine;
 public class Raycast : MonoBehaviour
 {
     [SerializeField] private Vector3 rayDirection = new(0,0,10);
+    public GameObject currentRaycastedCell;
     
     void FixedUpdate()
     {
@@ -14,7 +15,12 @@ public class Raycast : MonoBehaviour
         if (Physics.Raycast(position, rayDirection * rayDirection.z, out var hit))
         {
             //Print the name of the Collider your Box hit
-            Debug.Log($"Raycast hit:{hit.collider.name} from {gameObject.name}");
+            // Debug.Log($"Raycast hit:{hit.collider.name} from {gameObject.name}");
+            currentRaycastedCell = hit.collider.gameObject;
+        }
+        else
+        {
+            currentRaycastedCell = null;
         }
     }
 }
