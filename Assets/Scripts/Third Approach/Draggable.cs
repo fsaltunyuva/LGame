@@ -48,7 +48,6 @@ public class Draggable : MonoBehaviour
 
         if (areAllPartsRaycastsCells)
         {
-            
             GameObject l1RaycastedCell = _l1.GetComponent<Raycast>().currentRaycastedCell;
             l1RaycastedCell.GetComponent<SpriteRenderer>().color = _l1.GetComponent<SpriteRenderer>().color;
             
