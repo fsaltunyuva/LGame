@@ -6,6 +6,7 @@ public class Draggable : MonoBehaviour
     [SerializeField] private GameObject _l1, _l2, _l3, _l4;
     private float _l1OriginalZ, _l2OriginalZ, _l3OriginalZ, _l4OriginalZ;
     private Vector3 startingLoc;
+    private GameObject[] lObjects;
     
     private void Start()
     {
@@ -13,7 +14,10 @@ public class Draggable : MonoBehaviour
         _l2OriginalZ = _l2.transform.position.z;
         _l3OriginalZ = _l3.transform.position.z;
         _l4OriginalZ = _l4.transform.position.z;
-        startingLoc = transform.position;
+        startingLoc = transform.parent.position;
+        Debug.Log(startingLoc);
+        
+        lObjects = new[] {_l1, _l2, _l3, _l4};
     }
 
     private Vector3 GetMouseWorldPosition()
@@ -26,11 +30,19 @@ public class Draggable : MonoBehaviour
     private void OnMouseDown()
     {
         _mousePoisitionOffset = transform.position - GetMouseWorldPosition();
+        transform.localScale = new Vector3(1, 1, 1);
     }
 
     private void OnMouseDrag()
     {
         transform.position = GetMouseWorldPosition() + _mousePoisitionOffset;
+
+        // foreach (var l in lObjects)
+        // {
+        //     SpriteRenderer lSpriteRenderer = l.GetComponent<SpriteRenderer>();
+        //     Color lSpriteRendererColor = lSpriteRenderer.color;
+        //     lSpriteRenderer.color = new Color(lSpriteRendererColor.r, lSpriteRendererColor.g, lSpriteRendererColor.b, 0.5f);
+        // }
     }
 
     private void OnMouseUp()
@@ -60,8 +72,7 @@ public class Draggable : MonoBehaviour
             GameObject l4RaycastedCell = _l4.GetComponent<Raycast>().currentRaycastedCell;
             l4RaycastedCell.GetComponent<SpriteRenderer>().color = _l4.GetComponent<SpriteRenderer>().color;
             
-            transform.gameObject.SetActive(false);
-            
+
             // Vector3 positionToBeTransformedTo;
             //
             // GameObject l1RaycastedCell = _l1.GetComponent<Raycast>().currentRaycastedCell;
@@ -83,13 +94,13 @@ public class Draggable : MonoBehaviour
             // positionToBeTransformedTo = new Vector3(l4RaycastedCell.transform.position.x,
             //     l4RaycastedCell.transform.position.y, _l4OriginalZ);
             // _l4.transform.position = positionToBeTransformedTo;
-            
+
             // Position Change Debugging
             // Debug.Log(firstLoc - _l1.transform.position);
             // Debug.Log(firstLoc2 - _l2.transform.position);
             // Debug.Log(firstLoc3 - _l3.transform.position);
             // Debug.Log(firstLoc4 - _l4.transform.position);
-            
+
             // Attempt to calculating the center of the 4 game objects and changing the center of the parent object to that
             // but it doesn't work because center calculation is not like what I thought it was
             // Vector3[] playersInGame = {positionToBeTransformedTo1, positionToBeTransformedTo2, positionToBeTransformedTo3, positionToBeTransformedTo4};
@@ -105,7 +116,7 @@ public class Draggable : MonoBehaviour
             // var centerY = totalY / 4;
             //
             // transform.position = new Vector3(centerX, centerY, transform.position.z);
-            
+
             // Attempt to change the center of the box colliders of the parent but it doesn't work because colliders' center is in local space
             // parentCollider1.center = transform.TransformPoint(_l1.GetComponent<BoxCollider>().center);
             // parentCollider2.center = transform.TransformPoint(_l2.GetComponent<BoxCollider>().center);
@@ -114,7 +125,7 @@ public class Draggable : MonoBehaviour
         }
         else
         {
-            transform.position = startingLoc;
+            // transform.parent.position = startingLoc;
         }
     }
     
