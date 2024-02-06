@@ -38,6 +38,7 @@ public class Draggable : MonoBehaviour
     {
         if (canObjectBeMoved)
         {
+            //TODO: Fade the colors of the cells that you started from
             _mousePoisitionOffset = transform.position - GetMouseWorldPosition();
         }
     }
@@ -97,12 +98,17 @@ public class Draggable : MonoBehaviour
                 l4RaycastedCell.GetComponent<SpriteRenderer>().color = _l4.GetComponent<SpriteRenderer>().color;
 
                 //NOT: L'nin sadece childları Z'de dışarıda parent 0da
+                
+                //TODO: Mark the chosen L locations with faded colors of red or blue (Part 1)
                 _gameManager.ChangeInfoText("Move the coin or skip");
                 _gameManager.ChangeButtons();
-                //TODO: Marking the chosen L locations with faded colors of red or blue
+                //TODO: Mark coin as movable
                 //TODO: Coin placement (or Skipping)
+                //TODO: Mark coin as unmovable
+                //TODO: Check if the opponent can place L
                 _gameManager.NextTurn();
-
+                //TODO: Fade back the colors of the cells that you have changed in part 1 to their og colors
+                //TODO: Change the color of the L
 
                 // Vector3 positionToBeTransformedTo;
                 //
@@ -157,6 +163,11 @@ public class Draggable : MonoBehaviour
             else
             {
                 // transform.parent.position = startingLoc;
+            }
+
+            public bool CanPlayerPlaceL(string[,] array)
+            {
+                
             }
         }
     }
