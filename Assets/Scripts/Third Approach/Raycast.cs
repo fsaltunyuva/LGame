@@ -15,7 +15,7 @@ public class Raycast : MonoBehaviour
         if (Physics.Raycast(position, rayDirection * rayDirection.z, out var hit))
         {
             //Print the name of the Collider your Box hit
-            // Debug.Log($"Raycast hit:{hit.collider.name} from {gameObject.name}");
+            Debug.Log($"Raycast hit:{hit.collider.name} from {gameObject.name}");
             currentRaycastedCell = hit.collider.gameObject;
         }
         else
