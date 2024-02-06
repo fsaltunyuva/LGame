@@ -100,6 +100,7 @@ public class Draggable : MonoBehaviour
                 //NOT: L'nin sadece childları Z'de dışarıda parent 0da
                 
                 //TODO: Mark the chosen L locations with faded colors of red or blue (Part 1)
+                //TODO: Prevent the player from accessing L
                 _gameManager.ChangeInfoText("Move the coin or skip");
                 _gameManager.ChangeButtons();
                 //TODO: Mark coin as movable
