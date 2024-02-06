@@ -6420,7 +6420,7 @@ MonoBehaviour:
   _l2: {fileID: 374049502}
   _l3: {fileID: 1379115931}
   _l4: {fileID: 1621302182}
-  _gameManager: {fileID: 0}
+  _gameManager: {fileID: 1550857181}
   isGameObjectRelatedToL: 1
   canObjectBeMoved: 1
 --- !u!65 &2079213271
