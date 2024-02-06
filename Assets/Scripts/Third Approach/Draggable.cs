@@ -164,11 +164,6 @@ public class Draggable : MonoBehaviour
             {
                 // transform.parent.position = startingLoc;
             }
-
-            public bool CanPlayerPlaceL(string[,] array)
-            {
-                
-            }
         }
     }
 }
