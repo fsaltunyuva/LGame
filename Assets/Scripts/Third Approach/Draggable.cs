@@ -8,7 +8,7 @@ public class Draggable : MonoBehaviour
     private Vector3 startingLoc;
     private GameObject[] lObjects;
     [SerializeField] private GameManager _gameManager;
-    [SerializeField] private bool isGameObjectRelatedToL, canObjectBeMoved = true;
+    [SerializeField] public bool isGameObjectRelatedToL, canObjectBeMoved = true, currentColor;
 
     private void Start()
     {
@@ -49,7 +49,7 @@ public class Draggable : MonoBehaviour
         {
             transform.position = GetMouseWorldPosition() + _mousePoisitionOffset;
         }
-        
+
 
         // foreach (var l in lObjects)
         // {
@@ -66,50 +66,103 @@ public class Draggable : MonoBehaviour
         // Vector3 firstLoc2 = _l2.transform.position;
         // Vector3 firstLoc3 = _l3.transform.position;
         // Vector3 firstLoc4 = _l4.transform.position;
-        
+
         if (!isGameObjectRelatedToL) //Possibly coin
         {
             if (canObjectBeMoved)
             {
                 GameObject coinRaycastedCell = gameObject.GetComponent<Raycast>().currentRaycastedCell;
-                Vector3 positionToBeTransformedTo = new Vector3(coinRaycastedCell.transform.position.x, coinRaycastedCell.transform.position.y, transform.position.z);
+                Vector3 positionToBeTransformedTo = new Vector3(coinRaycastedCell.transform.position.x,
+                    coinRaycastedCell.transform.position.y, transform.position.z);
                 transform.position = positionToBeTransformedTo;
             }
         }
         else
         {
-            bool areAllPartsRaycastsCells = !(_l1.GetComponent<Raycast>().currentRaycastedCell is null) &&
-                                            !(_l2.GetComponent<Raycast>().currentRaycastedCell is null) &&
-                                            !(_l3.GetComponent<Raycast>().currentRaycastedCell is null) &&
-                                            !(_l4.GetComponent<Raycast>().currentRaycastedCell is null);
-
-            if (areAllPartsRaycastsCells)
+            if (canObjectBeMoved)
             {
-                GameObject l1RaycastedCell = _l1.GetComponent<Raycast>().currentRaycastedCell;
-                l1RaycastedCell.GetComponent<SpriteRenderer>().color = _l1.GetComponent<SpriteRenderer>().color;
+                GameObject l1CurrentlyRaycastedCell = _l1.GetComponent<Raycast>().currentRaycastedCell;
+                GameObject l2CurrentlyRaycastedCell = _l2.GetComponent<Raycast>().currentRaycastedCell;
+                GameObject l3CurrentlyRaycastedCell = _l3.GetComponent<Raycast>().currentRaycastedCell;
+                GameObject l4CurrentlyRaycastedCell = _l4.GetComponent<Raycast>().currentRaycastedCell;
 
-                GameObject l2RaycastedCell = _l2.GetComponent<Raycast>().currentRaycastedCell;
-                l2RaycastedCell.GetComponent<SpriteRenderer>().color = _l2.GetComponent<SpriteRenderer>().color;
-
-                GameObject l3RaycastedCell = _l3.GetComponent<Raycast>().currentRaycastedCell;
-                l3RaycastedCell.GetComponent<SpriteRenderer>().color = _l3.GetComponent<SpriteRenderer>().color;
-
-                GameObject l4RaycastedCell = _l4.GetComponent<Raycast>().currentRaycastedCell;
-                l4RaycastedCell.GetComponent<SpriteRenderer>().color = _l4.GetComponent<SpriteRenderer>().color;
-
-                //NOT: L'nin sadece childları Z'de dışarıda parent 0da
+                bool areAllPartsRaycastsCells = !(l1CurrentlyRaycastedCell is null) &&
+                                                !(l2CurrentlyRaycastedCell is null) &&
+                                                !(l3CurrentlyRaycastedCell is null) &&
+                                                !(l4CurrentlyRaycastedCell is null);
                 
-                //TODO: Mark the chosen L locations with faded colors of red or blue (Part 1)
-                //TODO: Prevent the player from accessing L
-                _gameManager.ChangeInfoText("Move the coin or skip");
-                _gameManager.ChangeButtons();
-                //TODO: Mark coin as movable
-                //TODO: Coin placement (or Skipping)
-                //TODO: Mark coin as unmovable
-                //TODO: Check if the opponent can place L
-                _gameManager.NextTurn();
-                //TODO: Fade back the colors of the cells that you have changed in part 1 to their og colors
-                //TODO: Change the color of the L
+                bool areCellsValidForPlacement = false;
+                bool areAllPartsRaycastsCellsCurrentColor = true;
+                if (areAllPartsRaycastsCells) //To prevent null reference exception
+                {
+                    string l1CurrentlyRaycastedCellStatus = l1CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status;
+                    string l2CurrentlyRaycastedCellStatus = l2CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status;
+                    string l3CurrentlyRaycastedCellStatus = l3CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status;
+                    string l4CurrentlyRaycastedCellStatus = l4CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status;
+                    
+                    //Create a bool to check if the ray casted cells are valid to place L
+                    //TODO: This bool calculates the wrong bool, fix it
+                    areCellsValidForPlacement =
+                        !(l1CurrentlyRaycastedCellStatus.Equals(_gameManager.GetOpponentColor()) || l1CurrentlyRaycastedCellStatus.Equals("COIN")) &&
+                        !(l2CurrentlyRaycastedCellStatus.Equals(_gameManager.GetOpponentColor()) || l2CurrentlyRaycastedCellStatus.Equals("COIN")) &&
+                        !(l3CurrentlyRaycastedCellStatus.Equals(_gameManager.GetOpponentColor()) || l3CurrentlyRaycastedCellStatus.Equals("COIN")) &&
+                        !(l4CurrentlyRaycastedCellStatus.Equals(_gameManager.GetOpponentColor()) || l4CurrentlyRaycastedCellStatus.Equals("COIN"));
+                    
+                    //Create a bool to check if all ray casted cells are casting the current colors
+                    areAllPartsRaycastsCellsCurrentColor =
+                        l1CurrentlyRaycastedCellStatus.Equals(_gameManager.currentColor) &&
+                        l2CurrentlyRaycastedCellStatus.Equals(_gameManager.currentColor) &&
+                        l3CurrentlyRaycastedCellStatus.Equals(_gameManager.currentColor) &&
+                        l4CurrentlyRaycastedCellStatus.Equals(_gameManager.currentColor);
+                }
+                
+                Debug.Log("Are all parts raycasts cells: " + areAllPartsRaycastsCells);
+                Debug.Log("Are cells valid for placement: " + areCellsValidForPlacement);
+                Debug.Log("Are all parts raycasts cells current color: " + areAllPartsRaycastsCellsCurrentColor);
+
+                if (areAllPartsRaycastsCells && areCellsValidForPlacement && !areAllPartsRaycastsCellsCurrentColor)
+                {
+                    //NOT: L'nin sadece childları Z'de dışarıda parent 0da
+                    Color ogColor = _l1.GetComponent<SpriteRenderer>().color;
+
+                    GameObject l1RaycastedCell = _l1.GetComponent<Raycast>().currentRaycastedCell;
+                    l1RaycastedCell.GetComponent<SpriteRenderer>().color =
+                        new Color(ogColor.r, ogColor.g, ogColor.b,
+                            0.5f); //Mark the chosen L locations with faded colors of red or blue (Part 1)
+
+                    GameObject l2RaycastedCell = _l2.GetComponent<Raycast>().currentRaycastedCell;
+                    l2RaycastedCell.GetComponent<SpriteRenderer>().color =
+                        new Color(ogColor.r, ogColor.g, ogColor.b,
+                            0.5f); //Mark the chosen L locations with faded colors of red or blue (Part 1)
+
+                    GameObject l3RaycastedCell = _l3.GetComponent<Raycast>().currentRaycastedCell;
+                    l3RaycastedCell.GetComponent<SpriteRenderer>().color =
+                        new Color(ogColor.r, ogColor.g, ogColor.b,
+                            0.5f); //Mark the chosen L locations with faded colors of red or blue (Part 1)
+
+                    GameObject l4RaycastedCell = _l4.GetComponent<Raycast>().currentRaycastedCell;
+                    l4RaycastedCell.GetComponent<SpriteRenderer>().color =
+                        new Color(ogColor.r, ogColor.g, ogColor.b,
+                            0.5f); //Mark the chosen L locations with faded colors of red or blue (Part 1)
+
+                    //TODO: Prevent the player placing the L on invalid cells
+                    canObjectBeMoved = false; //Prevent the player from using L
+                    //TODO: Change L's location or remove it temporarily
+                    _gameManager.ChangeInfoText("Move the coin or skip"); //Update the info text
+                    _gameManager
+                        .ChangeButtons(); //Replace the rotate and mirror buttons with next turn and skip buttons or visa versa
+                    _gameManager.MakeGameObjectMovable("coin"); //Mark coin as movable
+                    //TODO: Coin placement (or Skipping)
+                    //TODO: Prevent the player placing the coin on invalid cells
+                    //TODO: Ensure that the player moved only one coin
+                    //TODO: Mark coin as unmovable
+                    //TODO: Update the 2D Array
+                    //TODO: Check if the opponent can place L
+                    _gameManager.NextTurn();
+                    //TODO: Fade back the colors of the cells that you have changed in part 1 to their og colors
+                    //TODO: Change the color of the L
+                }
+
 
                 // Vector3 positionToBeTransformedTo;
                 //
