@@ -913,7 +913,7 @@ Transform:
   m_GameObject: {fileID: 374049502}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2, y: 1, z: -1.39}
+  m_LocalPosition: {x: -2, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1524,6 +1524,7 @@ MonoBehaviour:
   _gameManager: {fileID: 1550857181}
   isGameObjectRelatedToL: 0
   canObjectBeMoved: 0
+  currentColor: 0
 --- !u!114 &529657406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2280,7 +2281,7 @@ Transform:
   m_GameObject: {fileID: 757423020}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2, y: 2.3, z: -1.39}
+  m_LocalPosition: {x: -2, y: 2.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2988,7 +2989,7 @@ Transform:
   m_GameObject: {fileID: 999936401}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0, y: 3.551, z: 0}
+  m_LocalPosition: {x: -0, y: 3.551, z: -1.39}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4316,7 +4317,7 @@ Transform:
   m_GameObject: {fileID: 1379115931}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2, y: -0.3, z: -1.39}
+  m_LocalPosition: {x: -2, y: -0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4909,7 +4910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3229f48abf2f7e47bd719539a0a1eae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  l: {fileID: 999936401}
+  l: {fileID: 2079213265}
 --- !u!114 &1550857181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4927,6 +4928,24 @@ MonoBehaviour:
   mirrorButton: {fileID: 604100328}
   nextTurnButton: {fileID: 1909720063}
   coin: {fileID: 529657402}
+  currentColor: RED
+  cells:
+  - {fileID: 1422336432}
+  - {fileID: 614079690}
+  - {fileID: 1361884727}
+  - {fileID: 820931735}
+  - {fileID: 550438191}
+  - {fileID: 271818229}
+  - {fileID: 317057576}
+  - {fileID: 1010676545}
+  - {fileID: 740292972}
+  - {fileID: 767203008}
+  - {fileID: 1125383856}
+  - {fileID: 1085846609}
+  - {fileID: 1433041303}
+  - {fileID: 1904214078}
+  - {fileID: 1175244828}
+  - {fileID: 2044849848}
 --- !u!1 &1621302182
 GameObject:
   m_ObjectHideFlags: 0
@@ -5007,7 +5026,7 @@ Transform:
   m_GameObject: {fileID: 1621302182}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.75, y: -0.3, z: -1.39}
+  m_LocalPosition: {x: -0.75, y: -0.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5404,6 +5423,7 @@ MonoBehaviour:
   _gameManager: {fileID: 1550857181}
   isGameObjectRelatedToL: 0
   canObjectBeMoved: 0
+  currentColor: 0
 --- !u!212 &1702539553
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -6491,7 +6511,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.1}
-  m_Center: {x: -2.01, y: -0.3, z: -1.4}
+  m_Center: {x: -2.01, y: -0.3, z: 0}
 --- !u!65 &2079213269
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6512,7 +6532,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.1}
-  m_Center: {x: -0.75, y: -0.3, z: -1.4}
+  m_Center: {x: -0.75, y: -0.3, z: 0}
 --- !u!114 &2079213270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6532,6 +6552,7 @@ MonoBehaviour:
   _gameManager: {fileID: 1550857181}
   isGameObjectRelatedToL: 1
   canObjectBeMoved: 1
+  currentColor: 0
 --- !u!65 &2079213271
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6552,7 +6573,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.1}
-  m_Center: {x: -2.01, y: 2.31, z: -1.4}
+  m_Center: {x: -2.01, y: 2.31, z: 0}
 --- !u!65 &2079213272
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6573,7 +6594,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 0.1}
-  m_Center: {x: -2.01, y: 1, z: -1.4}
+  m_Center: {x: -2.01, y: 1, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

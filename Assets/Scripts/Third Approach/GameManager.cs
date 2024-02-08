@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject coin;
     
     [SerializeField] public string currentColor = "RED";
+    
+    [SerializeField] public GameObject[] cells;
 
     // Start is called before the first frame update
     void Start()
@@ -71,6 +73,22 @@ public class GameManager : MonoBehaviour
             return "BLUE";
         
         return "RED";
+    }
+    
+    public void ClearPreviousCellsStates(GameObject filledL1, GameObject filledL2, GameObject filledL3, GameObject filledL4)
+    {
+        foreach (GameObject cell in cells)
+        {
+            CellSecondApproach cellScript = cell.GetComponent<CellSecondApproach>();
+
+            if (cellScript.status == currentColor && cell != filledL1 && cell != filledL2 && cell != filledL3 &&
+                cell != filledL4)
+            {
+                cellScript.status = "EMPTY";
+                cellScript.UpdateColor();
+            }
+            //cellScript.UpdateColor();
+        }
     }
 
     // Check Algorithm
