@@ -27,40 +27,33 @@ public class GameManager : MonoBehaviour
     {
         infoText.text = "Red's Turn!";
         
-        string[,] test1 =
+        TestAlgorithm();
+    }
+
+    public void ToggleLVisibility(int toggleSwitch)
+    {
+        Color ogColor = _l1.GetComponent<SpriteRenderer>().color;
+
+        switch (toggleSwitch)
         {
-            {"EMPTY", "EMPTY", "COIN", "EMPTY"},
-            {"BLUE", "BLUE", "BLUE", "EMPTY"},
-            {"RED", "EMPTY", "BLUE", "EMPTY"},
-            {"RED", "RED", "RED", "COIN"}
-        };
-        
-        Debug.Log($"Final 1: {CanPlayerPlace(test1, "RED")}");
-        
-        string[,] test2 =
-        {
-            {"EMPTY", "EMPTY", "BLUE", "EMPTY"},
-            {"COIN", "EMPTY", "BLUE", "EMPTY"},
-            {"RED", "BLUE", "BLUE", "COIN"},
-            {"RED", "RED", "RED", "EMPTY"}
-        };
-        Debug.Log($"Final 2: {CanPlayerPlace(test2, "RED")}");
-        
-        string[,] test3 =
-        {
-            {"EMPTY", "COIN", "EMPTY", "EMPTY"},
-            {"COIN", "BLUE", "EMPTY", "EMPTY"},
-            {"RED", "BLUE", "BLUE", "BLUE"},
-            {"RED", "RED", "RED", "EMPTY"}
-        };
-        Debug.Log($"Final 3: {CanPlayerPlace(test3, "RED")}");
-        
-        //TODO: Test the algorithm on other winning conditions ("https://fr.wikipedia.org/wiki/L_(jeu)")
+            case 1:
+                _l1.GetComponent<SpriteRenderer>().color = new Color(ogColor.r, ogColor.g, ogColor.b, 1);
+                _l2.GetComponent<SpriteRenderer>().color = new Color(ogColor.r, ogColor.g, ogColor.b, 1);
+                _l3.GetComponent<SpriteRenderer>().color = new Color(ogColor.r, ogColor.g, ogColor.b, 1);
+                _l4.GetComponent<SpriteRenderer>().color = new Color(ogColor.r, ogColor.g, ogColor.b, 1);
+                break;
+            case 0:
+                _l1.GetComponent<SpriteRenderer>().color = new Color(ogColor.r, ogColor.g, ogColor.b, 0);
+                _l2.GetComponent<SpriteRenderer>().color = new Color(ogColor.r, ogColor.g, ogColor.b, 0);
+                _l3.GetComponent<SpriteRenderer>().color = new Color(ogColor.r, ogColor.g, ogColor.b, 0);
+                _l4.GetComponent<SpriteRenderer>().color = new Color(ogColor.r, ogColor.g, ogColor.b, 0);
+                break;
+        }
+
     }
 
     public void NextTurn()
     {
-        //TODO: Change the color of L
         if (currentColor == "RED")
         {
             _l1.GetComponent<SpriteRenderer>().color = Color.blue;
@@ -82,6 +75,28 @@ public class GameManager : MonoBehaviour
         
         _lFirstParent.GetComponent<Draggable>().canObjectBeMoved = true;
         ChangeButtons(); //Replace the rotate and mirror buttons with next turn and skip buttons or visa versa
+        ToggleLVisibility(1);
+
+        foreach (var cell in GetSpecificColoredCells(currentColor))
+        {
+            Color cellOgColor = cell.GetComponent<SpriteRenderer>().color;
+            cell.GetComponent<SpriteRenderer>().color = new Color(cellOgColor.r, cellOgColor.g, cellOgColor.b, 0.5f);
+        }
+        
+    }
+
+    public GameObject[] GetSpecificColoredCells(string color){
+        List<GameObject> coloredCells = new List<GameObject>();
+        foreach (GameObject cell in cells)
+        {
+            CellSecondApproach cellScript = cell.GetComponent<CellSecondApproach>();
+            if (cellScript.status == color)
+            {
+                coloredCells.Add(cell);
+            }
+        }
+
+        return coloredCells.ToArray();
     }
 
     public void ChangeInfoText(string text)
@@ -257,6 +272,39 @@ public class GameManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void TestAlgorithm()
+    {
+        string[,] test1 =
+        {
+            {"EMPTY", "EMPTY", "COIN", "EMPTY"},
+            {"BLUE", "BLUE", "BLUE", "EMPTY"},
+            {"RED", "EMPTY", "BLUE", "EMPTY"},
+            {"RED", "RED", "RED", "COIN"}
+        };
+        
+        Debug.Log($"Final 1: {CanPlayerPlace(test1, "RED")}");
+        
+        string[,] test2 =
+        {
+            {"EMPTY", "EMPTY", "BLUE", "EMPTY"},
+            {"COIN", "EMPTY", "BLUE", "EMPTY"},
+            {"RED", "BLUE", "BLUE", "COIN"},
+            {"RED", "RED", "RED", "EMPTY"}
+        };
+        Debug.Log($"Final 2: {CanPlayerPlace(test2, "RED")}");
+        
+        string[,] test3 =
+        {
+            {"EMPTY", "COIN", "EMPTY", "EMPTY"},
+            {"COIN", "BLUE", "EMPTY", "EMPTY"},
+            {"RED", "BLUE", "BLUE", "BLUE"},
+            {"RED", "RED", "RED", "EMPTY"}
+        };
+        Debug.Log($"Final 3: {CanPlayerPlace(test3, "RED")}");
+        
+        //TODO: Test the algorithm on other winning conditions ("https://fr.wikipedia.org/wiki/L_(jeu)")
     }
     //* Check Algorithm
 

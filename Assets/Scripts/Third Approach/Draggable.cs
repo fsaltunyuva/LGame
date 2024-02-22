@@ -45,7 +45,6 @@ public class Draggable : MonoBehaviour
 
         if (canObjectBeMoved)
         {
-            //TODO: Fade the colors of the cells that you started from
             _mousePoisitionOffset = transform.position - GetMouseWorldPosition();
         }
     }
@@ -105,8 +104,6 @@ public class Draggable : MonoBehaviour
                         _gameManager.GetOpponentColor()); // Update the 2D Array and check if the opponent can place L
                     Debug.Log(debugForPlacement);
                     _gameManager.NextTurn();
-                    //TODO: Fade back the colors of the cells that you have changed in part 1 to their og colors
-                    //TODO: Change the color of the L
                 }
                 else
                 {
@@ -174,30 +171,30 @@ public class Draggable : MonoBehaviour
                     // GameObject l1RaycastedCell = _l1.GetComponent<Raycast>().currentRaycastedCell;
                     l1CurrentlyRaycastedCell.GetComponent<SpriteRenderer>().color =
                         new Color(ogColor.r, ogColor.g, ogColor.b,
-                            0.5f); //Mark the chosen L locations with faded colors of red or blue (Part 1)
+                            1); //Mark the chosen L locations with faded colors of red or blue (Part 1)
                     l1CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status = _gameManager.currentColor;
 
                     // GameObject l2RaycastedCell = _l2.GetComponent<Raycast>().currentRaycastedCell;
                     l2CurrentlyRaycastedCell.GetComponent<SpriteRenderer>().color =
                         new Color(ogColor.r, ogColor.g, ogColor.b,
-                            0.5f); //Mark the chosen L locations with faded colors of red or blue (Part 1)
+                            1); //Mark the chosen L locations with faded colors of red or blue (Part 1)
                     l2CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status = _gameManager.currentColor;
 
                     //GameObject l3RaycastedCell = _l3.GetComponent<Raycast>().currentRaycastedCell;
                     l3CurrentlyRaycastedCell.GetComponent<SpriteRenderer>().color =
                         new Color(ogColor.r, ogColor.g, ogColor.b,
-                            0.5f); //Mark the chosen L locations with faded colors of red or blue (Part 1)
+                            1); //Mark the chosen L locations with faded colors of red or blue (Part 1)
                     l3CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status = _gameManager.currentColor;
 
                     //GameObject l4RaycastedCell = _l4.GetComponent<Raycast>().currentRaycastedCell;
                     l4CurrentlyRaycastedCell.GetComponent<SpriteRenderer>().color =
                         new Color(ogColor.r, ogColor.g, ogColor.b,
-                            0.5f); //Mark the chosen L locations with faded colors of red or blue (Part 1)
+                            1); //Mark the chosen L locations with faded colors of red or blue (Part 1)
                     l4CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status = _gameManager.currentColor;
 
 
                     canObjectBeMoved = false; //Prevent the player from using L
-                    //TODO: Change L's location or remove it temporarily
+                    _gameManager.ToggleLVisibility(0); // Change L's location or remove it temporarily
                     _gameManager.ClearPreviousCellsStates(l1CurrentlyRaycastedCell, l2CurrentlyRaycastedCell,
                         l3CurrentlyRaycastedCell, l4CurrentlyRaycastedCell);
                     _gameManager.ChangeInfoText("Move the coin or skip"); //Update the info text
