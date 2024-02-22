@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
                 else
                     coin.GetComponent<Draggable>().canObjectBeMoved = false;
                 break;
+            //No need for the "l" case it is done with canObjectMoved = false for now
         }
     }
     

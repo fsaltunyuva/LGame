@@ -10,6 +10,7 @@ public class Draggable : MonoBehaviour
     [SerializeField] private GameManager _gameManager;
     [SerializeField] public bool isGameObjectRelatedToL, canObjectBeMoved = true, currentColor;
     private Vector3 locationBeforeDrag;
+    private GameObject cellBeforeCoinDrag;
 
     private void Start()
     {
@@ -38,6 +39,9 @@ public class Draggable : MonoBehaviour
     private void OnMouseDown()
     {
         locationBeforeDrag = transform.position; //Only for the coin for now
+        
+        if(!isGameObjectRelatedToL) //Namely, coin
+            cellBeforeCoinDrag = gameObject.GetComponent<Raycast>().currentRaycastedCell; 
         
         if (canObjectBeMoved)
         {
@@ -70,7 +74,7 @@ public class Draggable : MonoBehaviour
         // Vector3 firstLoc3 = _l3.transform.position;
         // Vector3 firstLoc4 = _l4.transform.position;
 
-        if (!isGameObjectRelatedToL) //Possibly coin
+        if (!isGameObjectRelatedToL) //Namely, coin
         {
             if (canObjectBeMoved)
             {
@@ -84,6 +88,8 @@ public class Draggable : MonoBehaviour
                     isCellValidForPlacement =
                         coinRaycastedCell.GetComponent<CellSecondApproach>().status.Equals("EMPTY");
 
+               
+
                 if (isCoinRaycastsCell &&
                     isCellValidForPlacement) //Prevent the player placing the coin on invalid cells
                 {
@@ -92,7 +98,9 @@ public class Draggable : MonoBehaviour
                     transform.position = positionToBeTransformedTo;
                     coinRaycastedCell.GetComponent<CellSecondApproach>().status = "COIN";
                     
-                    //TODO: Mark coin as unmovable
+                    _gameManager.MakeGameObjectMovable("coin", 0); // Mark coin as unmovable
+                    cellBeforeCoinDrag.GetComponent<CellSecondApproach>().status = "EMPTY"; // Update the previous location of the coin as "EMPTY"
+                    
                     //TODO: Update the 2D Array
                     //TODO: Check if the opponent can place L
                     _gameManager.NextTurn();
