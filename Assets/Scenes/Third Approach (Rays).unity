@@ -4927,7 +4927,8 @@ MonoBehaviour:
   rotateButton: {fileID: 1489203927}
   mirrorButton: {fileID: 604100328}
   nextTurnButton: {fileID: 1909720063}
-  coin: {fileID: 529657402}
+  coin1: {fileID: 529657402}
+  coin2: {fileID: 1702539549}
   currentColor: RED
   cells:
   - {fileID: 1422336432}
@@ -4946,6 +4947,11 @@ MonoBehaviour:
   - {fileID: 1904214078}
   - {fileID: 1175244828}
   - {fileID: 2044849848}
+  _l1: {fileID: 757423020}
+  _l2: {fileID: 374049502}
+  _l3: {fileID: 1379115931}
+  _l4: {fileID: 1621302182}
+  _lFirstParent: {fileID: 2079213265}
 --- !u!1 &1621302182
 GameObject:
   m_ObjectHideFlags: 0
@@ -5124,7 +5130,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Next Turn
+  m_text: Skip
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5943,7 +5949,7 @@ GameObject:
   - component: {fileID: 1909720066}
   - component: {fileID: 1909720065}
   m_Layer: 5
-  m_Name: Next Turn Button
+  m_Name: Skip Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6013,9 +6019,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1550857180}
-        m_TargetAssemblyTypeName: Rotate, Assembly-CSharp
-        m_MethodName: RotateL
+      - m_Target: {fileID: 1550857181}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: SkipCoinPlacement
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

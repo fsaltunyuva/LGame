@@ -39,10 +39,10 @@ public class Draggable : MonoBehaviour
     private void OnMouseDown()
     {
         locationBeforeDrag = transform.position; //Only for the coin for now
-        
-        if(!isGameObjectRelatedToL) //Namely, coin
-            cellBeforeCoinDrag = gameObject.GetComponent<Raycast>().currentRaycastedCell; 
-        
+
+        if (!isGameObjectRelatedToL) //Namely, coin
+            cellBeforeCoinDrag = gameObject.GetComponent<Raycast>().currentRaycastedCell;
+
         if (canObjectBeMoved)
         {
             //TODO: Fade the colors of the cells that you started from
@@ -88,7 +88,6 @@ public class Draggable : MonoBehaviour
                     isCellValidForPlacement =
                         coinRaycastedCell.GetComponent<CellSecondApproach>().status.Equals("EMPTY");
 
-               
 
                 if (isCoinRaycastsCell &&
                     isCellValidForPlacement) //Prevent the player placing the coin on invalid cells
@@ -97,12 +96,14 @@ public class Draggable : MonoBehaviour
                         coinRaycastedCell.transform.position.y, transform.position.z);
                     transform.position = positionToBeTransformedTo;
                     coinRaycastedCell.GetComponent<CellSecondApproach>().status = "COIN";
-                    
+
                     _gameManager.MakeGameObjectMovable("coin", 0); // Mark coin as unmovable
-                    cellBeforeCoinDrag.GetComponent<CellSecondApproach>().status = "EMPTY"; // Update the previous location of the coin as "EMPTY"
-                    
-                    //TODO: Update the 2D Array
-                    //TODO: Check if the opponent can place L
+                    cellBeforeCoinDrag.GetComponent<CellSecondApproach>().status =
+                        "EMPTY"; // Update the previous location of the coin as "EMPTY"
+
+                    bool debugForPlacement = GameManager.CanPlayerPlace(_gameManager.GetStatesArray(),
+                        _gameManager.GetOpponentColor()); // Update the 2D Array and check if the opponent can place L
+                    Debug.Log(debugForPlacement);
                     _gameManager.NextTurn();
                     //TODO: Fade back the colors of the cells that you have changed in part 1 to their og colors
                     //TODO: Change the color of the L
@@ -202,63 +203,8 @@ public class Draggable : MonoBehaviour
                     _gameManager.ChangeInfoText("Move the coin or skip"); //Update the info text
                     _gameManager
                         .ChangeButtons(); //Replace the rotate and mirror buttons with next turn and skip buttons or visa versa
-                    _gameManager.MakeGameObjectMovable("coin"); //Mark coin as movable
+                    _gameManager.MakeGameObjectMovable("coins"); //Mark coins as movable
                 }
-
-
-                // Vector3 positionToBeTransformedTo;
-                //
-                // GameObject l1RaycastedCell = _l1.GetComponent<Raycast>().currentRaycastedCell;
-                // positionToBeTransformedTo = new Vector3(l1RaycastedCell.transform.position.x,
-                //     l1RaycastedCell.transform.position.y, _l1OriginalZ);
-                // _l1.transform.position = positionToBeTransformedTo;
-                //
-                // GameObject l2RaycastedCell = _l2.GetComponent<Raycast>().currentRaycastedCell;
-                // positionToBeTransformedTo = new Vector3(l2RaycastedCell.transform.position.x,
-                //     l2RaycastedCell.transform.position.y, _l2OriginalZ);
-                // _l2.transform.position = positionToBeTransformedTo;
-                //
-                // GameObject l3RaycastedCell = _l3.GetComponent<Raycast>().currentRaycastedCell;
-                // positionToBeTransformedTo = new Vector3(l3RaycastedCell.transform.position.x,
-                //     l3RaycastedCell.transform.position.y, _l3OriginalZ);
-                // _l3.transform.position = positionToBeTransformedTo;
-                //
-                // GameObject l4RaycastedCell = _l4.GetComponent<Raycast>().currentRaycastedCell;
-                // positionToBeTransformedTo = new Vector3(l4RaycastedCell.transform.position.x,
-                //     l4RaycastedCell.transform.position.y, _l4OriginalZ);
-                // _l4.transform.position = positionToBeTransformedTo;
-
-                // Position Change Debugging
-                // Debug.Log(firstLoc - _l1.transform.position);
-                // Debug.Log(firstLoc2 - _l2.transform.position);
-                // Debug.Log(firstLoc3 - _l3.transform.position);
-                // Debug.Log(firstLoc4 - _l4.transform.position);
-
-                // Attempt to calculating the center of the 4 game objects and changing the center of the parent object to that
-                // but it doesn't work because center calculation is not like what I thought it was
-                // Vector3[] playersInGame = {positionToBeTransformedTo1, positionToBeTransformedTo2, positionToBeTransformedTo3, positionToBeTransformedTo4};
-                //
-                // var totalX = 0f;
-                // var totalY = 0f;
-                // foreach(var player in playersInGame)
-                // {
-                //     totalX += player.x;
-                //     totalY += player.y;
-                // }
-                // var centerX = totalX / 4;
-                // var centerY = totalY / 4;
-                //
-                // transform.position = new Vector3(centerX, centerY, transform.position.z);
-
-                // Attempt to change the center of the box colliders of the parent but it doesn't work because colliders' center is in local space
-                // parentCollider1.center = transform.TransformPoint(_l1.GetComponent<BoxCollider>().center);
-                // parentCollider2.center = transform.TransformPoint(_l2.GetComponent<BoxCollider>().center);
-                // parentCollider3.center = transform.TransformPoint(_l3.GetComponent<BoxCollider>().center);
-                // parentCollider4.center = transform.TransformPoint(_l4.GetComponent<BoxCollider>().center);
-            }
-            else
-            {
-                // transform.parent.position = startingLoc;
             }
         }
     }

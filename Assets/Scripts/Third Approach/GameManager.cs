@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,26 +11,77 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject rotateButton, mirrorButton, nextTurnButton;
     
-    [SerializeField] private GameObject coin;
+    [FormerlySerializedAs("coin")] [SerializeField] private GameObject coin1;
+    [SerializeField] private GameObject coin2;
     
     [SerializeField] public string currentColor = "RED";
     
     [SerializeField] public GameObject[] cells;
+    
+    [SerializeField] private GameObject _l1, _l2, _l3, _l4;
+
+    [SerializeField] private GameObject _lFirstParent;
 
     // Start is called before the first frame update
     void Start()
     {
         infoText.text = "Red's Turn!";
+        
+        string[,] test1 =
+        {
+            {"EMPTY", "EMPTY", "COIN", "EMPTY"},
+            {"BLUE", "BLUE", "BLUE", "EMPTY"},
+            {"RED", "EMPTY", "BLUE", "EMPTY"},
+            {"RED", "RED", "RED", "COIN"}
+        };
+        
+        Debug.Log($"Final 1: {CanPlayerPlace(test1, "RED")}");
+        
+        string[,] test2 =
+        {
+            {"EMPTY", "EMPTY", "BLUE", "EMPTY"},
+            {"COIN", "EMPTY", "BLUE", "EMPTY"},
+            {"RED", "BLUE", "BLUE", "COIN"},
+            {"RED", "RED", "RED", "EMPTY"}
+        };
+        Debug.Log($"Final 2: {CanPlayerPlace(test2, "RED")}");
+        
+        string[,] test3 =
+        {
+            {"EMPTY", "COIN", "EMPTY", "EMPTY"},
+            {"COIN", "BLUE", "EMPTY", "EMPTY"},
+            {"RED", "BLUE", "BLUE", "BLUE"},
+            {"RED", "RED", "RED", "EMPTY"}
+        };
+        Debug.Log($"Final 3: {CanPlayerPlace(test3, "RED")}");
+        
+        //TODO: Test the algorithm on other winning conditions ("https://fr.wikipedia.org/wiki/L_(jeu)")
     }
 
     public void NextTurn()
     {
-        //Change the color of L
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        //TODO: Change the color of L
+        if (currentColor == "RED")
+        {
+            _l1.GetComponent<SpriteRenderer>().color = Color.blue;
+            _l2.GetComponent<SpriteRenderer>().color = Color.blue;
+            _l3.GetComponent<SpriteRenderer>().color = Color.blue;
+            _l4.GetComponent<SpriteRenderer>().color = Color.blue;
+            currentColor = "BLUE";
+            infoText.text = "Blue's Turn!";
+        }
+        else
+        {
+            _l1.GetComponent<SpriteRenderer>().color = Color.red;
+            _l2.GetComponent<SpriteRenderer>().color = Color.red;
+            _l3.GetComponent<SpriteRenderer>().color = Color.red;
+            _l4.GetComponent<SpriteRenderer>().color = Color.red;
+            currentColor = "RED";
+            infoText.text = "Red's Turn!";
+        }
+        
+        _lFirstParent.GetComponent<Draggable>().canObjectBeMoved = true;
+        ChangeButtons(); //Replace the rotate and mirror buttons with next turn and skip buttons or visa versa
     }
 
     public void ChangeInfoText(string text)
@@ -58,11 +111,18 @@ public class GameManager : MonoBehaviour
     {
         switch (gameObjectName)
         {
-            case "coin":
-                if(control == 1)
-                    coin.GetComponent<Draggable>().canObjectBeMoved = true;
+            case "coins":
+                if (control == 1)
+                {
+                    coin1.GetComponent<Draggable>().canObjectBeMoved = true;
+                    coin2.GetComponent<Draggable>().canObjectBeMoved = true;
+                }
+
                 else
-                    coin.GetComponent<Draggable>().canObjectBeMoved = false;
+                {
+                    coin1.GetComponent<Draggable>().canObjectBeMoved = false;
+                    coin2.GetComponent<Draggable>().canObjectBeMoved = false;
+                }
                 break;
             //No need for the "l" case it is done with canObjectMoved = false for now
         }
@@ -90,6 +150,42 @@ public class GameManager : MonoBehaviour
             }
             //cellScript.UpdateColor();
         }
+    }
+
+    public string[,] GetStatesArray()
+    {
+        string[,] states = new string[4, 4];
+        int i = 0;
+        foreach (GameObject cell in cells)
+        {
+            CellSecondApproach cellScript = cell.GetComponent<CellSecondApproach>();
+            int j = 0;
+            switch (cellScript.status)
+            {
+                case "EMPTY":
+                    states[i, j] = "EMPTY";
+                    break;
+                case "RED":
+                    states[i, j] = "RED";
+                    break;
+                case "BLUE":
+                    states[i, j] = "BLUE";
+                    break;
+            }
+
+            j++;
+            if (j % 4 == 0)
+            {
+                i++;
+            }
+        }
+
+        return states;
+    }
+
+    public void SkipCoinPlacement()
+    {
+        NextTurn();
     }
 
     // Check Algorithm
