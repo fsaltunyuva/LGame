@@ -4,30 +4,11 @@ public class Draggable : MonoBehaviour
 {
     private Vector3 _mousePoisitionOffset;
     [SerializeField] private GameObject _l1, _l2, _l3, _l4;
-    private float _l1OriginalZ, _l2OriginalZ, _l3OriginalZ, _l4OriginalZ;
-    private Vector3 startingLoc;
-    private GameObject[] lObjects;
     [SerializeField] private GameManager _gameManager;
     [SerializeField] public bool isGameObjectRelatedToL, canObjectBeMoved = true, currentColor;
     private Vector3 locationBeforeDrag;
     private GameObject cellBeforeCoinDrag;
 
-    private void Start()
-    {
-        if (isGameObjectRelatedToL)
-        {
-            startingLoc = transform.parent.position;
-            _l1OriginalZ = _l1.transform.position.z;
-            _l2OriginalZ = _l2.transform.position.z;
-            _l3OriginalZ = _l3.transform.position.z;
-            _l4OriginalZ = _l4.transform.position.z;
-            lObjects = new[] { _l1, _l2, _l3, _l4 };
-        }
-        else
-        {
-            startingLoc = transform.position;
-        }
-    }
 
     private Vector3 GetMouseWorldPosition()
     {
@@ -55,24 +36,10 @@ public class Draggable : MonoBehaviour
         {
             transform.position = GetMouseWorldPosition() + _mousePoisitionOffset;
         }
-
-
-        // foreach (var l in lObjects)
-        // {
-        //     SpriteRenderer lSpriteRenderer = l.GetComponent<SpriteRenderer>();
-        //     Color lSpriteRendererColor = lSpriteRenderer.color;
-        //     lSpriteRenderer.color = new Color(lSpriteRendererColor.r, lSpriteRendererColor.g, lSpriteRendererColor.b, 0.5f);
-        // }
     }
 
     private void OnMouseUp()
     {
-        // Storing the first location of the 4 game objects
-        // Vector3 firstLoc = _l1.transform.position;
-        // Vector3 firstLoc2 = _l2.transform.position;
-        // Vector3 firstLoc3 = _l3.transform.position;
-        // Vector3 firstLoc4 = _l4.transform.position;
-
         if (!isGameObjectRelatedToL) //Namely, coin
         {
             if (canObjectBeMoved)
@@ -191,7 +158,6 @@ public class Draggable : MonoBehaviour
                         new Color(ogColor.r, ogColor.g, ogColor.b,
                             1); //Mark the chosen L locations with faded colors of red or blue (Part 1)
                     l4CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status = _gameManager.currentColor;
-
 
                     canObjectBeMoved = false; //Prevent the player from using L
                     _gameManager.ToggleLVisibility(0); // Change L's location or remove it temporarily

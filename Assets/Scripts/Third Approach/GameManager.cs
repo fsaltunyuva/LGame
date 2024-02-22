@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -21,8 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _l1, _l2, _l3, _l4;
 
     [SerializeField] private GameObject _lFirstParent;
-
-    // Start is called before the first frame update
+    
     void Start()
     {
         infoText.text = "Red's Turn!";
@@ -304,6 +301,14 @@ public class GameManager : MonoBehaviour
         };
         Debug.Log($"Final 3: {CanPlayerPlace(test3, "RED")}");
         
+        string[,] test4 =
+        {
+            {"EMPTY", "EMPTY", "BLUE", "EMPTY"},
+            {"COIN", "EMPTY", "BLUE", "EMPTY"},
+            {"RED", "COIN", "BLUE", "BLUE"},
+            {"RED", "RED", "RED", "EMPTY"}
+        };
+        Debug.Log($"Final 4: {CanPlayerPlace(test4, "RED")}");
         //TODO: Test the algorithm on other winning conditions ("https://fr.wikipedia.org/wiki/L_(jeu)")
     }
     //* Check Algorithm
