@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -80,6 +81,13 @@ public class GameManager : MonoBehaviour
             cell.GetComponent<SpriteRenderer>().color = new Color(cellOgColor.r, cellOgColor.g, cellOgColor.b, 0.5f);
         }
         
+    }
+
+    public void GameOver()
+    {
+        infoText.text = currentColor + " Wins!";
+        Debug.Log("GAME OVER!");
+        //TODO: Add game over panel
     }
 
     public GameObject[] GetSpecificColoredCells(string color){
@@ -168,10 +176,11 @@ public class GameManager : MonoBehaviour
     {
         string[,] states = new string[4, 4];
         int i = 0;
+        int j = 0;
         foreach (GameObject cell in cells)
         {
             CellSecondApproach cellScript = cell.GetComponent<CellSecondApproach>();
-            int j = 0;
+            
             switch (cellScript.status)
             {
                 case "EMPTY":
@@ -183,12 +192,16 @@ public class GameManager : MonoBehaviour
                 case "BLUE":
                     states[i, j] = "BLUE";
                     break;
+                case "COIN":
+                    states[i, j] = "COIN";
+                    break;
             }
 
             j++;
             if (j % 4 == 0)
             {
                 i++;
+                j = 0;
             }
         }
 
@@ -310,6 +323,21 @@ public class GameManager : MonoBehaviour
         };
         Debug.Log($"Final 4: {CanPlayerPlace(test4, "RED")}");
         //TODO: Test the algorithm on other winning conditions ("https://fr.wikipedia.org/wiki/L_(jeu)")
+    }
+    
+    public void Print2DArray(string[,] arrToPrint)
+    {
+        StringBuilder sb = new StringBuilder();
+        for(int i=0; i< arrToPrint .GetLength(1); i++)
+        {
+            for(int j=0; j<arrToPrint .GetLength(0); j++)
+            {
+                sb.Append(arrToPrint [i,j]);
+                sb.Append(' ');				   
+            }
+            sb.AppendLine();
+        }
+        Debug.Log(sb.ToString());
     }
     //* Check Algorithm
 

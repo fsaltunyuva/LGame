@@ -70,7 +70,18 @@ public class Draggable : MonoBehaviour
                     bool debugForPlacement = GameManager.CanPlayerPlace(_gameManager.GetStatesArray(),
                         _gameManager.GetOpponentColor()); // Update the 2D Array and check if the opponent can place L
                     Debug.Log(debugForPlacement);
-                    _gameManager.NextTurn();
+                    _gameManager.Print2DArray(_gameManager.GetStatesArray());
+                    //string[,] debugArray = _gameManager.GetStatesArray();
+
+                    if (debugForPlacement)
+                    {
+                        _gameManager.NextTurn();
+                    }
+                    else
+                    {
+                        _gameManager.GameOver();
+                    }
+                    
                 }
                 else
                 {
