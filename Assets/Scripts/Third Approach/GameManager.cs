@@ -337,7 +337,6 @@ public class GameManager : MonoBehaviour
             }
             sb.AppendLine();
         }
-        Debug.Log(sb.ToString());
     }
     //* Check Algorithm
 

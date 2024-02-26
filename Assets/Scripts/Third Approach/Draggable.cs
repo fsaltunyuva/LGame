@@ -3,11 +3,13 @@ using UnityEngine;
 public class Draggable : MonoBehaviour
 {
     private Vector3 _mousePoisitionOffset;
+    private Vector3 _mousePoisitionOffsetOfInvisibleRectangle;
     [SerializeField] private GameObject _l1, _l2, _l3, _l4;
     [SerializeField] private GameManager _gameManager;
     [SerializeField] public bool isGameObjectRelatedToL, canObjectBeMoved = true, currentColor;
     private Vector3 locationBeforeDrag;
     private GameObject cellBeforeCoinDrag;
+    [SerializeField] private GameObject invisibleRectangle;
 
 
     private Vector3 GetMouseWorldPosition()
@@ -28,7 +30,10 @@ public class Draggable : MonoBehaviour
         {
             _mousePoisitionOffset = transform.position - GetMouseWorldPosition();
         }
-    }
+        
+        if(isGameObjectRelatedToL) //Move the invisible rectangle according to the l's movement
+            _mousePoisitionOffsetOfInvisibleRectangle = invisibleRectangle.transform.position - GetMouseWorldPosition();
+    }   
 
     private void OnMouseDrag()
     {
@@ -36,6 +41,9 @@ public class Draggable : MonoBehaviour
         {
             transform.position = GetMouseWorldPosition() + _mousePoisitionOffset;
         }
+        
+        if(isGameObjectRelatedToL) //Move the invisible rectangle according to the l's movement
+            invisibleRectangle.transform.position = GetMouseWorldPosition() + _mousePoisitionOffsetOfInvisibleRectangle;
     }
 
     private void OnMouseUp()
