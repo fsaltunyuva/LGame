@@ -237,7 +237,7 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-
+        
         return false;
     }
     
@@ -245,16 +245,16 @@ public class GameManager : MonoBehaviour
     {
         string oppColor = color == "RED" ? "BLUE" : "RED";
 
-        for (int m = 0; m < 4; m++)
+        for (int m = 0; m < 4; m++) 
         {
             for (int d = 0; d < 4; d++)
             {
-                bool res = true;
-                int x = i, y = j, sameColCounter = 0;
+                bool res = true; 
+                int x = i, y = j, sameColCounter = 0; 
                 
-                for (int a = 0; a < 3; a++)
+                for (int a = 0; a < 3; a++) 
                 {
-                    if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor)
+                    if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor) 
                     {
                         res = false;
                         continue;
@@ -268,7 +268,7 @@ public class GameManager : MonoBehaviour
                     y = y + mults[m, 1] * dirs[d, a, 1];
                 }
 
-                if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor)
+                if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor) //Check the last cell
                 {
                     res = false;
                 }
@@ -277,11 +277,84 @@ public class GameManager : MonoBehaviour
                     sameColCounter++;
                 }
 
-                if (res && sameColCounter < 4) return true;
+                if (res && sameColCounter < 4)
+                    return true; //If the player can place the L
             }
         }
 
         return false;
+    }
+    
+    public static List<List<Pair>> GetPossibleLCoordinatePairs(string[,] array, string color)
+    {
+        List<List<Pair>> placeableCoordinates = new List<List<Pair>>();
+        
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                placeableCoordinates.AddRange(GetPossibleLCoordinatePairsUtil(array, color, i, j));
+            }
+        }
+        
+        return placeableCoordinates;
+        
+    }
+    
+    private static List<List<Pair>> GetPossibleLCoordinatePairsUtil(string[,] array, string color, int i, int j)
+    {
+        string oppColor = color == "RED" ? "BLUE" : "RED";
+        List<List<Pair>> placeableCoordinates = new List<List<Pair>>();
+        
+        for (int m = 0; m < 4; m++) 
+        {
+            for (int d = 0; d < 4; d++)
+            {
+                bool res = true; 
+                int x = i, y = j, sameColCounter = 0; 
+                
+                List<Pair> placeableCoordinate = new List<Pair>();
+                
+                for (int a = 0; a < 3; a++) 
+                {
+                    if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor) 
+                    {
+                        res = false;
+                    }
+                    else if (array[x, y] == color)
+                    {
+                        sameColCounter++;
+                    }
+                    if (res)
+                    {
+                        placeableCoordinate.Add(new Pair(x, y));
+                    }
+                    
+                    x = x + mults[m, 0] * dirs[d, a, 0];
+                    y = y + mults[m, 1] * dirs[d, a, 1];
+                }
+
+                if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor) //Check the last cell
+                {
+                    res = false;
+                }
+                else if (array[x, y] == color)
+                {
+                    sameColCounter++;
+                }
+
+                if (res && sameColCounter < 4)
+                {
+                    placeableCoordinate.Add(new Pair(x, y));
+                    placeableCoordinates.Add(placeableCoordinate);
+                }
+                    
+            }
+        }
+        
+        return placeableCoordinates;
+
+        // return false;
     }
 
     private void TestAlgorithm()
@@ -338,6 +411,45 @@ public class GameManager : MonoBehaviour
             sb.AppendLine();
         }
     }
+    
+    public void PrintList(List<List<Pair>> listToPrint)
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (var list in listToPrint)
+        {
+            foreach (var pair in list)
+            {
+                sb.Append(pair.ToString());
+                sb.Append(',');
+            }
+            sb.AppendLine();
+        }
+        
+        Debug.Log(sb.ToString());
+    }
+    
+    public void PrintPairRow(List<Pair> listToPrint)
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (var pair in listToPrint)
+        {
+            sb.Append(pair.ToString());
+            sb.Append(',');
+        }
+        sb.AppendLine();
+        
+        Debug.Log(sb.ToString());
+    }
+    
+    public int GetCellNumberFromCoordinates(int x, int y)
+    {
+        return x * 4 + y + 1;
+    }
+    
+    //TODO: Create menu to choose between vs computer or vs player
+    //TODO: Make the code understand Alkım's language
+    //TODO: Make AI mover the coins or skip them using
+    //TODO: AI not working on skip (NextTurn'de Çağır)
     //* Check Algorithm
 
 }
