@@ -80,7 +80,7 @@ public class Draggable : MonoBehaviour
                     cellBeforeCoinDrag.GetComponent<CellSecondApproach>().status =
                         "EMPTY"; // Update the previous location of the coin as "EMPTY"
 
-                    bool debugForPlacement = GameManager.CanPlayerPlace(_gameManager.GetStatesArray(), _gameManager.GetOpponentColor()); // Update the 2D Array and check if the opponent can place L
+                    bool debugForPlacement = GameManager.CanPlayerPlaceL(_gameManager.GetStatesArray(), _gameManager.GetOpponentColor()); // Update the 2D Array and check if the opponent can place L
                     Debug.Log($"Are there any possible l position to place? {debugForPlacement}");
                     
                     _gameManager.Print2DArray(_gameManager.GetStatesArray());

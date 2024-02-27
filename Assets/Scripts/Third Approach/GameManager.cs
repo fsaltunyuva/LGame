@@ -10,25 +10,27 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI infoText;
 
     [SerializeField] private GameObject rotateButton, mirrorButton, nextTurnButton;
-    
-    [FormerlySerializedAs("coin")] [SerializeField] private GameObject coin1;
+
+    [FormerlySerializedAs("coin")] [SerializeField]
+    private GameObject coin1;
+
     [SerializeField] private GameObject coin2;
-    
+
     [SerializeField] public string currentColor = "RED";
-    
+
     [SerializeField] public GameObject[] cells;
-    
+
     [SerializeField] private GameObject _l1, _l2, _l3, _l4;
 
     [SerializeField] private GameObject _lFirstParent;
-    
+
     Random random = new Random();
-    
+
     void Start()
     {
         infoText.text = "Red's Turn!";
-        
-        TestAlgorithm();
+
+        TestAlgorithmForWinningConditions();
     }
 
     public void ToggleLVisibility(int toggleSwitch)
@@ -50,7 +52,6 @@ public class GameManager : MonoBehaviour
                 _l4.GetComponent<SpriteRenderer>().color = new Color(ogColor.r, ogColor.g, ogColor.b, 0);
                 break;
         }
-
     }
 
     public void NextTurn()
@@ -73,7 +74,7 @@ public class GameManager : MonoBehaviour
             currentColor = "RED";
             infoText.text = "Red's Turn!";
         }
-        
+
         _lFirstParent.GetComponent<Draggable>().canObjectBeMoved = true;
         ChangeButtons(); //Replace the rotate and mirror buttons with next turn and skip buttons or visa versa
         ToggleLVisibility(1);
@@ -83,13 +84,13 @@ public class GameManager : MonoBehaviour
             Color cellOgColor = cell.GetComponent<SpriteRenderer>().color;
             cell.GetComponent<SpriteRenderer>().color = new Color(cellOgColor.r, cellOgColor.g, cellOgColor.b, 0.5f);
         }
-        
+
         //AI
-        List<List<Pair>> tempPossibleLCoordinatePairs = GetPossibleLCoordinatePairs(GetStatesArray(), GetOpponentColor());
+        List<List<Pair>> tempPossibleLCoordinatePairs =
+            GetPossibleLCoordinatePairs(GetStatesArray(), GetOpponentColor());
         int randomIndex = random.Next(0, tempPossibleLCoordinatePairs.Count);
         PrintPairRow(tempPossibleLCoordinatePairs[randomIndex]);
         //*AI
-        
     }
 
     public void GameOver()
@@ -99,7 +100,8 @@ public class GameManager : MonoBehaviour
         //TODO: Add game over panel
     }
 
-    public GameObject[] GetSpecificColoredCells(string color){
+    public GameObject[] GetSpecificColoredCells(string color)
+    {
         List<GameObject> coloredCells = new List<GameObject>();
         foreach (GameObject cell in cells)
         {
@@ -152,20 +154,22 @@ public class GameManager : MonoBehaviour
                     coin1.GetComponent<Draggable>().canObjectBeMoved = false;
                     coin2.GetComponent<Draggable>().canObjectBeMoved = false;
                 }
+
                 break;
             //No need for the "l" case it is done with canObjectMoved = false for now
         }
     }
-    
+
     public string GetOpponentColor()
     {
         if (currentColor == "RED")
             return "BLUE";
-        
+
         return "RED";
     }
-    
-    public void ClearPreviousCellsStates(GameObject filledL1, GameObject filledL2, GameObject filledL3, GameObject filledL4)
+
+    public void ClearPreviousCellsStates(GameObject filledL1, GameObject filledL2, GameObject filledL3,
+        GameObject filledL4)
     {
         foreach (GameObject cell in cells)
         {
@@ -189,7 +193,7 @@ public class GameManager : MonoBehaviour
         foreach (GameObject cell in cells)
         {
             CellSecondApproach cellScript = cell.GetComponent<CellSecondApproach>();
-            
+
             switch (cellScript.status)
             {
                 case "EMPTY":
@@ -223,47 +227,55 @@ public class GameManager : MonoBehaviour
     }
 
     // Check Algorithm
-    
+
+    //Necessary 3D array for the algorithm (For the directions)
     public static int[,,] dirs = new int[4, 3, 2]
+        {
+            { { 0, 1 }, { 0, 1 }, { 1, 0 } },
+            { { 0, 1 }, { 1, 0 }, { 1, 0 } },
+            { { 1, 0 }, { 0, 1 }, { 0, 1 } },
+            { { 1, 0 }, { 1, 0 }, { 0, 1 } }
+        };
+
+    //Necessary 2D array for the algorithm (For the multipliers)
+    public static int[,] mults = new int[4, 2]
     {
-        { { 0, 1 }, { 0, 1 }, { 1, 0 } },
-        { { 0, 1 }, { 1, 0 }, { 1, 0 } },
-        { { 1, 0 }, { 0, 1 }, { 0, 1 } },
-        { { 1, 0 }, { 1, 0 }, { 0, 1 } }
+        { 1, 1 }, 
+        { 1, -1 }, 
+        { -1, 1 }, 
+        { -1, -1 }
     };
 
-    public static int[,] mults = new int[4, 2] { { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 } };
-
-    public static bool CanPlayerPlace(string[,] array, string color)
+    public static bool CanPlayerPlaceL(string[,] array, string color)
     {
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
             {
-                if (IsValidStart(array, color, i, j))
+                if (CanPlayerPlaceLUtil(array, color, i, j))
                 {
                     return true;
                 }
             }
         }
-        
+
         return false;
     }
-    
-    public static bool IsValidStart(string[,] array, string color, int i, int j)
+
+    public static bool CanPlayerPlaceLUtil(string[,] array, string color, int i, int j)
     {
         string oppColor = color == "RED" ? "BLUE" : "RED";
 
-        for (int m = 0; m < 4; m++) 
+        for (int m = 0; m < 4; m++)
         {
             for (int d = 0; d < 4; d++)
             {
-                bool res = true; 
-                int x = i, y = j, sameColCounter = 0; 
-                
-                for (int a = 0; a < 3; a++) 
+                bool res = true;
+                int x = i, y = j, sameColCounter = 0;
+
+                for (int a = 0; a < 3; a++)
                 {
-                    if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor) 
+                    if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor)
                     {
                         res = false;
                         continue;
@@ -277,7 +289,8 @@ public class GameManager : MonoBehaviour
                     y = y + mults[m, 1] * dirs[d, a, 1];
                 }
 
-                if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor) //Check the last cell
+                if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" ||
+                    array[x, y] == oppColor) //Check the last cell
                 {
                     res = false;
                 }
@@ -293,11 +306,11 @@ public class GameManager : MonoBehaviour
 
         return false;
     }
-    
+
     public static List<List<Pair>> GetPossibleLCoordinatePairs(string[,] array, string color)
     {
         List<List<Pair>> placeableCoordinates = new List<List<Pair>>();
-        
+
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -305,28 +318,27 @@ public class GameManager : MonoBehaviour
                 placeableCoordinates.AddRange(GetPossibleLCoordinatePairsUtil(array, color, i, j));
             }
         }
-        
+
         return placeableCoordinates;
-        
     }
-    
+
     private static List<List<Pair>> GetPossibleLCoordinatePairsUtil(string[,] array, string color, int i, int j)
     {
         string oppColor = color == "RED" ? "BLUE" : "RED";
         List<List<Pair>> placeableCoordinates = new List<List<Pair>>();
-        
-        for (int m = 0; m < 4; m++) 
+
+        for (int m = 0; m < 4; m++)
         {
             for (int d = 0; d < 4; d++)
             {
-                bool res = true; 
-                int x = i, y = j, sameColCounter = 0; 
-                
+                bool res = true;
+                int x = i, y = j, sameColCounter = 0;
+
                 List<Pair> placeableCoordinate = new List<Pair>();
-                
-                for (int a = 0; a < 3; a++) 
+
+                for (int a = 0; a < 3; a++)
                 {
-                    if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor) 
+                    if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor)
                     {
                         res = false;
                     }
@@ -334,16 +346,18 @@ public class GameManager : MonoBehaviour
                     {
                         sameColCounter++;
                     }
+
                     if (res)
                     {
                         placeableCoordinate.Add(new Pair(x, y));
                     }
-                    
+
                     x = x + mults[m, 0] * dirs[d, a, 0];
                     y = y + mults[m, 1] * dirs[d, a, 1];
                 }
 
-                if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" || array[x, y] == oppColor) //Check the last cell
+                if (x < 0 || x > 3 || y < 0 || y > 3 || array[x, y] == "COIN" ||
+                    array[x, y] == oppColor) //Check the last cell
                 {
                     res = false;
                 }
@@ -357,86 +371,68 @@ public class GameManager : MonoBehaviour
                     placeableCoordinate.Add(new Pair(x, y));
                     placeableCoordinates.Add(placeableCoordinate);
                 }
-                    
             }
         }
-        
-        return placeableCoordinates;
 
-        // return false;
+        return placeableCoordinates;
     }
 
-    private void TestAlgorithm()
+    private void TestAlgorithmForWinningConditions()
     {
         string[,] test1 =
         {
-            {"EMPTY", "EMPTY", "COIN", "EMPTY"},
-            {"BLUE", "BLUE", "BLUE", "EMPTY"},
-            {"RED", "EMPTY", "BLUE", "EMPTY"},
-            {"RED", "RED", "RED", "COIN"}
+            { "EMPTY", "EMPTY", "COIN", "EMPTY" },
+            { "BLUE", "BLUE", "BLUE", "EMPTY" },
+            { "RED", "EMPTY", "BLUE", "EMPTY" },
+            { "RED", "RED", "RED", "COIN" }
         };
-        
-        Debug.Log($"Final 1: {CanPlayerPlace(test1, "RED")}");
-        
+
+        Debug.Log($"Final 1: {CanPlayerPlaceL(test1, "RED")}");
+
         string[,] test2 =
         {
-            {"EMPTY", "EMPTY", "BLUE", "EMPTY"},
-            {"COIN", "EMPTY", "BLUE", "EMPTY"},
-            {"RED", "BLUE", "BLUE", "COIN"},
-            {"RED", "RED", "RED", "EMPTY"}
+            { "EMPTY", "EMPTY", "BLUE", "EMPTY" },
+            { "COIN", "EMPTY", "BLUE", "EMPTY" },
+            { "RED", "BLUE", "BLUE", "COIN" },
+            { "RED", "RED", "RED", "EMPTY" }
         };
-        Debug.Log($"Final 2: {CanPlayerPlace(test2, "RED")}");
-        
+        Debug.Log($"Final 2: {CanPlayerPlaceL(test2, "RED")}");
+
         string[,] test3 =
         {
-            {"EMPTY", "COIN", "EMPTY", "EMPTY"},
-            {"COIN", "BLUE", "EMPTY", "EMPTY"},
-            {"RED", "BLUE", "BLUE", "BLUE"},
-            {"RED", "RED", "RED", "EMPTY"}
+            { "EMPTY", "COIN", "EMPTY", "EMPTY" },
+            { "COIN", "BLUE", "EMPTY", "EMPTY" },
+            { "RED", "BLUE", "BLUE", "BLUE" },
+            { "RED", "RED", "RED", "EMPTY" }
         };
-        Debug.Log($"Final 3: {CanPlayerPlace(test3, "RED")}");
-        
+        Debug.Log($"Final 3: {CanPlayerPlaceL(test3, "RED")}");
+
         string[,] test4 =
         {
-            {"EMPTY", "EMPTY", "BLUE", "EMPTY"},
-            {"COIN", "EMPTY", "BLUE", "EMPTY"},
-            {"RED", "COIN", "BLUE", "BLUE"},
-            {"RED", "RED", "RED", "EMPTY"}
+            { "EMPTY", "EMPTY", "BLUE", "EMPTY" },
+            { "COIN", "EMPTY", "BLUE", "EMPTY" },
+            { "RED", "COIN", "BLUE", "BLUE" },
+            { "RED", "RED", "RED", "EMPTY" }
         };
-        Debug.Log($"Final 4: {CanPlayerPlace(test4, "RED")}");
+        Debug.Log($"Final 4: {CanPlayerPlaceL(test4, "RED")}");
         //TODO: Test the algorithm on other winning conditions ("https://fr.wikipedia.org/wiki/L_(jeu)")
     }
-    
+
     public void Print2DArray(string[,] arrToPrint)
     {
         StringBuilder sb = new StringBuilder();
-        for(int i=0; i< arrToPrint .GetLength(1); i++)
+        for (int i = 0; i < arrToPrint.GetLength(1); i++)
         {
-            for(int j=0; j<arrToPrint .GetLength(0); j++)
+            for (int j = 0; j < arrToPrint.GetLength(0); j++)
             {
-                sb.Append(arrToPrint [i,j]);
-                sb.Append(' ');				   
+                sb.Append(arrToPrint[i, j]);
+                sb.Append(' ');
             }
+
             sb.AppendLine();
         }
     }
-    
-    public void PrintList(List<List<Pair>> listToPrint)
-    {
-        StringBuilder sb = new StringBuilder();
-        foreach (var list in listToPrint)
-        {
-            foreach (var pair in list)
-            {
-                sb.Append(pair.ToString());
-                sb.Append(',');
-            }
-            sb.AppendLine();
-        }
-        
-        Debug.Log(sb.ToString());
-    }
-    
+
     public void PrintPairRow(List<Pair> listToPrint)
     {
         StringBuilder sb = new StringBuilder();
@@ -445,19 +441,20 @@ public class GameManager : MonoBehaviour
             sb.Append(pair.ToString());
             sb.Append(',');
         }
+
+        sb.Length--; //Remove the last comma
         sb.AppendLine();
-        
+
         Debug.Log(sb.ToString());
     }
-    
+
     public int GetCellNumberFromCoordinates(int x, int y)
     {
         return x * 4 + y + 1;
     }
-    
-    //TODO: Create menu to choose between vs computer or vs player
-    //TODO: Make the code understand Alkım's language
-    //TODO: Make AI mover the coins or skip them using
-    //* Check Algorithm
 
+    //TODO: Create menu to choose between vs computer or vs player
+    //TODO: Make the Unity understand Alkım's language
+    //TODO: Make AI move the coins or skip the coin placement
+    //* Check Algorithm
 }
