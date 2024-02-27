@@ -6,21 +6,20 @@ using UnityEngine;
 public class Rotate : MonoBehaviour
 {
     [SerializeField] private GameObject l;
-    Vector3 groupCenter;
-    
-    //L'YE GÖRÜNMEYEN BİR DİKDÖRTGEN EKLEYEREK MERKEZİ DEĞİŞTİREBİLİRSİN
+    // Vector3 groupCenter;
+   
 
-    private void Start()
-    {
-        Vector3 sumVector = new Vector3(0f,0f,0f);
-
-        foreach (Transform child in l.transform)
-        {          
-            sumVector += child.position;        
-        }
-
-        groupCenter = sumVector / l.transform.childCount;
-    }
+    // private void Start()
+    // {
+    //     Vector3 sumVector = new Vector3(0f,0f,0f);
+    //
+    //     foreach (Transform child in l.transform)
+    //     {          
+    //         sumVector += child.position;        
+    //     }
+    //
+    //     groupCenter = sumVector / l.transform.childCount;
+    // }
 
     public void RotateL()
     {

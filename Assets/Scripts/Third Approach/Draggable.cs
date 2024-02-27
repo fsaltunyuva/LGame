@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Random = System.Random;
+
 
 public class Draggable : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class Draggable : MonoBehaviour
     private GameObject cellBeforeCoinDrag;
     [SerializeField] private GameObject invisibleRectangle;
     
-    Random random = new Random();
+    
 
 
     private Vector3 GetMouseWorldPosition()
@@ -88,9 +88,7 @@ public class Draggable : MonoBehaviour
 
                     if (debugForPlacement)
                     {
-                        List<List<Pair>> tempPossibleLCoordinatePairs = GameManager.GetPossibleLCoordinatePairs(_gameManager.GetStatesArray(), _gameManager.GetOpponentColor());
-                        int randomIndex = random.Next(0, tempPossibleLCoordinatePairs.Count);
-                        _gameManager.PrintPairRow(tempPossibleLCoordinatePairs[randomIndex]);
+
                         
                         _gameManager.NextTurn();
                     }

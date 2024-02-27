@@ -3,6 +3,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = System.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _l1, _l2, _l3, _l4;
 
     [SerializeField] private GameObject _lFirstParent;
+    
+    Random random = new Random();
     
     void Start()
     {
@@ -80,6 +83,12 @@ public class GameManager : MonoBehaviour
             Color cellOgColor = cell.GetComponent<SpriteRenderer>().color;
             cell.GetComponent<SpriteRenderer>().color = new Color(cellOgColor.r, cellOgColor.g, cellOgColor.b, 0.5f);
         }
+        
+        //AI
+        List<List<Pair>> tempPossibleLCoordinatePairs = GetPossibleLCoordinatePairs(GetStatesArray(), GetOpponentColor());
+        int randomIndex = random.Next(0, tempPossibleLCoordinatePairs.Count);
+        PrintPairRow(tempPossibleLCoordinatePairs[randomIndex]);
+        //*AI
         
     }
 
@@ -449,7 +458,6 @@ public class GameManager : MonoBehaviour
     //TODO: Create menu to choose between vs computer or vs player
     //TODO: Make the code understand Alkım's language
     //TODO: Make AI mover the coins or skip them using
-    //TODO: AI not working on skip (NextTurn'de Çağır)
     //* Check Algorithm
 
 }
