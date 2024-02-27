@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-
 
 public class Draggable : MonoBehaviour
 {
@@ -14,9 +11,6 @@ public class Draggable : MonoBehaviour
     private GameObject cellBeforeCoinDrag;
     [SerializeField] private GameObject invisibleRectangle;
     
-    
-
-
     private Vector3 GetMouseWorldPosition()
     {
         Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -88,8 +82,6 @@ public class Draggable : MonoBehaviour
 
                     if (debugForPlacement)
                     {
-
-                        
                         _gameManager.NextTurn();
                     }
                     else
@@ -158,28 +150,23 @@ public class Draggable : MonoBehaviour
                 if (areAllPartsRaycastsCells && areCellsValidForPlacement &&
                     !areAllPartsRaycastsCellsCurrentColor) //Prevent the player placing the L on invalid cells
                 {
-                    //NOT: L'nin sadece childları Z'de dışarıda parent 0da
                     Color ogColor = _l1.GetComponent<SpriteRenderer>().color;
-
-                    // GameObject l1RaycastedCell = _l1.GetComponent<Raycast>().currentRaycastedCell;
+                    
                     l1CurrentlyRaycastedCell.GetComponent<SpriteRenderer>().color =
                         new Color(ogColor.r, ogColor.g, ogColor.b,
                             1); //Mark the chosen L locations with faded colors of red or blue (Part 1)
                     l1CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status = _gameManager.currentColor;
-
-                    // GameObject l2RaycastedCell = _l2.GetComponent<Raycast>().currentRaycastedCell;
+                    
                     l2CurrentlyRaycastedCell.GetComponent<SpriteRenderer>().color =
                         new Color(ogColor.r, ogColor.g, ogColor.b,
                             1); //Mark the chosen L locations with faded colors of red or blue (Part 1)
                     l2CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status = _gameManager.currentColor;
-
-                    //GameObject l3RaycastedCell = _l3.GetComponent<Raycast>().currentRaycastedCell;
+                    
                     l3CurrentlyRaycastedCell.GetComponent<SpriteRenderer>().color =
                         new Color(ogColor.r, ogColor.g, ogColor.b,
                             1); //Mark the chosen L locations with faded colors of red or blue (Part 1)
                     l3CurrentlyRaycastedCell.GetComponent<CellSecondApproach>().status = _gameManager.currentColor;
-
-                    //GameObject l4RaycastedCell = _l4.GetComponent<Raycast>().currentRaycastedCell;
+                    
                     l4CurrentlyRaycastedCell.GetComponent<SpriteRenderer>().color =
                         new Color(ogColor.r, ogColor.g, ogColor.b,
                             1); //Mark the chosen L locations with faded colors of red or blue (Part 1)
@@ -187,11 +174,9 @@ public class Draggable : MonoBehaviour
 
                     canObjectBeMoved = false; //Prevent the player from using L
                     _gameManager.ToggleLVisibility(0); // Change L's location or remove it temporarily
-                    _gameManager.ClearPreviousCellsStates(l1CurrentlyRaycastedCell, l2CurrentlyRaycastedCell,
-                        l3CurrentlyRaycastedCell, l4CurrentlyRaycastedCell);
+                    _gameManager.ClearPreviousCellsStates(l1CurrentlyRaycastedCell, l2CurrentlyRaycastedCell, l3CurrentlyRaycastedCell, l4CurrentlyRaycastedCell);
                     _gameManager.ChangeInfoText("Move the coin or skip"); //Update the info text
-                    _gameManager
-                        .ChangeButtons(); //Replace the rotate and mirror buttons with next turn and skip buttons or visa versa
+                    _gameManager.ChangeButtons(); //Replace the rotate and mirror buttons with next turn and skip buttons or visa versa
                     _gameManager.MakeGameObjectMovable("coins"); //Mark coins as movable
                 }
             }
