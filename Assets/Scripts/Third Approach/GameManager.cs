@@ -86,13 +86,36 @@ public class GameManager : MonoBehaviour
         }
 
         //AI
-        //List<List<Pair>> tempPossibleLCoordinatePairs = GetPossibleLCoordinatePairs(GetStatesArray(), GetOpponentColor());
         List<List<Pair>> tempPossibleLCoordinatePairs = GetPossibleLCoordinatePairs(GetStatesArray(), currentColor);
         int randomIndex = random.Next(0, tempPossibleLCoordinatePairs.Count);
-        PrintPairRow(tempPossibleLCoordinatePairs[randomIndex]);
+        //PrintPairRow(tempPossibleLCoordinatePairs[randomIndex]);
         string cellNumbers = PairLineToCellNumbers(tempPossibleLCoordinatePairs[randomIndex]);
-        Debug.Log("AI's Cell Numbers: " + cellNumbers);
-        //*AI
+        Debug.Log("AI's Recommended Cell Numbers: " + cellNumbers);
+
+        //Coin Placement AI
+        //TODO: AI Should recommend coin placement with respect to its recommended L placement (Recommended L location and coin location may intersect)
+        int randomIndexForCoinPlacementSkip = random.Next(0, 2);
+        if (randomIndexForCoinPlacementSkip == 0)
+        {
+            int randomIndexForCoinToBePlaced = random.Next(0, 2);
+            string cellNumberOfTheCoinToBePlaced;
+                
+            if(randomIndexForCoinToBePlaced == 0)
+                cellNumberOfTheCoinToBePlaced = GetCoinCellNumbers().Split(',')[0];
+            else
+                cellNumberOfTheCoinToBePlaced = GetCoinCellNumbers().Split(',')[1];
+            
+            
+            int randomIndexForEmptyCellToBePlaced = random.Next(0, GetEmptyCellNumbers().Split(',').Length);
+            string cellNumberOfTheEmptyCellToBePlaced = GetEmptyCellNumbers().Split(',')[randomIndexForEmptyCellToBePlaced];
+            
+            Debug.Log("AI Recommends to place the coin from cell " + cellNumberOfTheCoinToBePlaced + " to cell " + cellNumberOfTheEmptyCellToBePlaced);
+        }
+        else
+        {
+            Debug.Log("AI's Recommends to skip coin placement");
+        }
+        //#AI
     }
 
     public void GameOver()
@@ -115,6 +138,39 @@ public class GameManager : MonoBehaviour
         }
 
         return coloredCells.ToArray();
+    }
+    
+    public string GetCoinCellNumbers(){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < cells.Length; i++)
+        {
+            CellSecondApproach cellScript = cells[i].GetComponent<CellSecondApproach>();
+            if (cellScript.status == "COIN")
+            {
+                sb.Append(i + 1);
+                sb.Append(',');
+            }
+        }
+
+        sb.Length--; //Remove the last comma
+        return sb.ToString();
+    }
+
+    public string GetEmptyCellNumbers()
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < cells.Length; i++)
+        {
+            CellSecondApproach cellScript = cells[i].GetComponent<CellSecondApproach>();
+            if (cellScript.status == "EMPTY")
+            {
+                sb.Append(i + 1);
+                sb.Append(',');
+            }
+        }
+
+        sb.Length--; //Remove the last comma
+        return sb.ToString();
     }
 
     public void ChangeInfoText(string text)
@@ -160,6 +216,25 @@ public class GameManager : MonoBehaviour
                 break;
             //No need for the "l" case it is done with canObjectMoved = false for now
         }
+    }
+
+    public void AIPlaceL(string cellNums)
+    {
+        int cell1 = int.Parse(cellNums.Split(',')[0]);
+        int cell2 = int.Parse(cellNums.Split(',')[1]);
+        int cell3 = int.Parse(cellNums.Split(',')[2]);
+        int cell4 = int.Parse(cellNums.Split(',')[3]);
+        
+        cells[cell1 - 1].GetComponent<CellSecondApproach>().status = currentColor;
+        cells[cell1 - 1].GetComponent<CellSecondApproach>().UpdateColor();
+        cells[cell2 - 1].GetComponent<CellSecondApproach>().status = currentColor;
+        cells[cell2 - 1].GetComponent<CellSecondApproach>().UpdateColor();
+        cells[cell3 - 1].GetComponent<CellSecondApproach>().status = currentColor;
+        cells[cell3 - 1].GetComponent<CellSecondApproach>().UpdateColor();
+        cells[cell4 - 1].GetComponent<CellSecondApproach>().status = currentColor;
+        cells[cell4 - 1].GetComponent<CellSecondApproach>().UpdateColor();
+        
+        _lFirstParent.GetComponent<Draggable>().canObjectBeMoved = false;
     }
 
     public string GetOpponentColor()
