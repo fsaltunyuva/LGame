@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("AI's Recommends to skip coin placement");
+            Debug.Log("AI Recommends to skip coin placement");
         }
         //#AI
     }
