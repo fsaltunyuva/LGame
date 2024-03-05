@@ -86,10 +86,12 @@ public class GameManager : MonoBehaviour
         }
 
         //AI
-        List<List<Pair>> tempPossibleLCoordinatePairs =
-            GetPossibleLCoordinatePairs(GetStatesArray(), GetOpponentColor());
+        //List<List<Pair>> tempPossibleLCoordinatePairs = GetPossibleLCoordinatePairs(GetStatesArray(), GetOpponentColor());
+        List<List<Pair>> tempPossibleLCoordinatePairs = GetPossibleLCoordinatePairs(GetStatesArray(), currentColor);
         int randomIndex = random.Next(0, tempPossibleLCoordinatePairs.Count);
         PrintPairRow(tempPossibleLCoordinatePairs[randomIndex]);
+        string cellNumbers = PairLineToCellNumbers(tempPossibleLCoordinatePairs[randomIndex]);
+        Debug.Log("AI's Cell Numbers: " + cellNumbers);
         //*AI
     }
 
@@ -446,6 +448,21 @@ public class GameManager : MonoBehaviour
         sb.AppendLine();
 
         Debug.Log(sb.ToString());
+    }
+    
+    public string PairLineToCellNumbers(List<Pair> listToPrint)
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (var pair in listToPrint)
+        {
+            sb.Append(GetCellNumberFromCoordinates(pair.x, pair.y));
+            sb.Append(',');
+        }
+
+        sb.Length--; //Remove the last comma
+        sb.AppendLine();
+
+        return sb.ToString();
     }
 
     public int GetCellNumberFromCoordinates(int x, int y)
