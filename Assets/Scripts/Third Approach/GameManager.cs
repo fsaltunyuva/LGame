@@ -75,11 +75,11 @@ public class GameManager : MonoBehaviour
             infoText.text = "Red's Turn!";
         }
 
-        _lFirstParent.GetComponent<Draggable>().canObjectBeMoved = true;
+        _lFirstParent.GetComponent<Draggable>().canObjectBeMoved = true; //Make the L movable
         ChangeButtons(); //Replace the rotate and mirror buttons with next turn and skip buttons or visa versa
-        ToggleLVisibility(1);
+        ToggleLVisibility(1); //Make the L visible
 
-        foreach (var cell in GetSpecificColoredCells(currentColor))
+        foreach (var cell in GetSpecificColoredCells(currentColor)) //Make the previous round's CURRENT COLORED cells transparent
         {
             Color cellOgColor = cell.GetComponent<SpriteRenderer>().color;
             cell.GetComponent<SpriteRenderer>().color = new Color(cellOgColor.r, cellOgColor.g, cellOgColor.b, 0.5f);
@@ -246,7 +246,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void ClearPreviousCellsStates(GameObject filledL1, GameObject filledL2, GameObject filledL3,
-        GameObject filledL4)
+        GameObject filledL4) //Clear the cells that are current color and not filledL1, filledL2, filledL3, filledL4
     {
         foreach (GameObject cell in cells)
         {

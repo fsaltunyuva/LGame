@@ -174,10 +174,14 @@ public class Draggable : MonoBehaviour
 
                     canObjectBeMoved = false; //Prevent the player from using L
                     _gameManager.ToggleLVisibility(0); // Change L's location or remove it temporarily
-                    _gameManager.ClearPreviousCellsStates(l1CurrentlyRaycastedCell, l2CurrentlyRaycastedCell, l3CurrentlyRaycastedCell, l4CurrentlyRaycastedCell);
+                    _gameManager.ClearPreviousCellsStates(l1CurrentlyRaycastedCell, l2CurrentlyRaycastedCell, l3CurrentlyRaycastedCell, l4CurrentlyRaycastedCell); //Clear the previous L locations
                     _gameManager.ChangeInfoText("Move the coin or skip"); //Update the info text
                     _gameManager.ChangeButtons(); //Replace the rotate and mirror buttons with next turn and skip buttons or visa versa
                     _gameManager.MakeGameObjectMovable("coins"); //Mark coins as movable
+                }
+                else
+                {
+                    //TODO: Add a feature to move the L back to its original position
                 }
             }
         }
