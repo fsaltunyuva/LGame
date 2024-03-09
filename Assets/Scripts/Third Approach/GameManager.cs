@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
@@ -90,30 +91,39 @@ public class GameManager : MonoBehaviour
         int randomIndex = random.Next(0, tempPossibleLCoordinatePairs.Count);
         //PrintPairRow(tempPossibleLCoordinatePairs[randomIndex]);
         string cellNumbers = PairLineToCellNumbers(tempPossibleLCoordinatePairs[randomIndex]);
-        Debug.Log("AI's Recommended Cell Numbers: " + cellNumbers);
+        Debug.LogWarning("AI's Recommended Cell Numbers: " + cellNumbers); //Format for cellNumbers: "1,2,3,4"
+        
+        int[] aiRecommendedCellNumbers = new int[4];
+        for (int i = 0; i < 4; i++)
+        {
+            aiRecommendedCellNumbers[i] = int.Parse(cellNumbers.Split(',')[i]);
+        }
 
         //Coin Placement AI
-        //TODO: AI Should recommend coin placement with respect to its recommended L placement (Recommended L location and coin location may intersect)
         int randomIndexForCoinPlacementSkip = random.Next(0, 2);
         if (randomIndexForCoinPlacementSkip == 0)
         {
-            int randomIndexForCoinToBePlaced = random.Next(0, 2);
+            string cellNumberOfTheEmptyCellToBePlaced;
             string cellNumberOfTheCoinToBePlaced;
+            do //AI Should recommend coin placement with respect to its recommended L placement (Recommended L location and coin location may intersect)
+            {
+                int randomIndexForCoinToBePlaced = random.Next(0, 2);
                 
-            if(randomIndexForCoinToBePlaced == 0)
-                cellNumberOfTheCoinToBePlaced = GetCoinCellNumbers().Split(',')[0];
-            else
-                cellNumberOfTheCoinToBePlaced = GetCoinCellNumbers().Split(',')[1];
+                if(randomIndexForCoinToBePlaced == 0)
+                    cellNumberOfTheCoinToBePlaced = GetCoinCellNumbers().Split(',')[0];
+                else
+                    cellNumberOfTheCoinToBePlaced = GetCoinCellNumbers().Split(',')[1];
             
+                int randomIndexForEmptyCellToBePlaced = random.Next(0, GetEmptyCellNumbers().Split(',').Length);
+                cellNumberOfTheEmptyCellToBePlaced = GetEmptyCellNumbers().Split(',')[randomIndexForEmptyCellToBePlaced];
+                
+            } while (aiRecommendedCellNumbers.Contains(int.Parse(cellNumberOfTheEmptyCellToBePlaced)));
             
-            int randomIndexForEmptyCellToBePlaced = random.Next(0, GetEmptyCellNumbers().Split(',').Length);
-            string cellNumberOfTheEmptyCellToBePlaced = GetEmptyCellNumbers().Split(',')[randomIndexForEmptyCellToBePlaced];
-            
-            Debug.Log("AI Recommends to place the coin from cell " + cellNumberOfTheCoinToBePlaced + " to cell " + cellNumberOfTheEmptyCellToBePlaced);
+            Debug.LogWarning("AI Recommends to place the coin from cell " + cellNumberOfTheCoinToBePlaced + " to cell " + cellNumberOfTheEmptyCellToBePlaced);
         }
         else
         {
-            Debug.Log("AI Recommends to skip coin placement");
+            Debug.LogWarning("AI Recommends to skip coin placement");
         }
         //#AI
     }
@@ -540,13 +550,9 @@ public class GameManager : MonoBehaviour
         return sb.ToString();
     }
 
-    public int GetCellNumberFromCoordinates(int x, int y)
+    public int GetCellNumberFromCoordinates(int x, int y) // Make the Unity understand Alkım's language
     {
         return x * 4 + y + 1;
     }
-
-    //TODO: Create menu to choose between vs computer or vs player
-    //TODO: Make the Unity understand Alkım's language
-    //TODO: Make AI move the coins or skip the coin placement
     //* Check Algorithm
 }
