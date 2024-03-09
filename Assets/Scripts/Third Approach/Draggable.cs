@@ -73,11 +73,12 @@ public class Draggable : MonoBehaviour
                     _gameManager.MakeGameObjectMovable("coin", 0); // Mark coin as unmovable
                     cellBeforeCoinDrag.GetComponent<CellSecondApproach>().status =
                         "EMPTY"; // Update the previous location of the coin as "EMPTY"
-
+                    
+                    //TODO: L Placement control should be in the NextTurn() method (Second parameter may be the current color in that case)
                     bool debugForPlacement = GameManager.CanPlayerPlaceL(_gameManager.GetStatesArray(), _gameManager.GetOpponentColor()); // Update the 2D Array and check if the opponent can place L
                     Debug.Log($"Are there any possible l position to place? {debugForPlacement}");
                     
-                    _gameManager.Print2DArray(_gameManager.GetStatesArray());
+                    //_gameManager.Print2DArray(_gameManager.GetStatesArray());
                     //string[,] debugArray = _gameManager.GetStatesArray();
 
                     if (debugForPlacement)
