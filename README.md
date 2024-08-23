@@ -20,3 +20,5 @@ The game logic and necessary algorithms are done, but UI-UX developments are inc
 - [ ] Thinking AI (Try to win the game, current AI plays randomly)
 - [ ] Difficulty Levels
 - [ ] UI-UX and QoL Improvements
+
+![](https://github.com/fsaltunyuva/LGame/blob/main/logic.png)
