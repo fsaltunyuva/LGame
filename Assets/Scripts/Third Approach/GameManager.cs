@@ -313,7 +313,7 @@ public class GameManager : MonoBehaviour
         NextTurn();
     }
 
-    // Check Algorithm
+    // Check Algorithm developed by Alkım Doğan (https://github.com/doganalkim)
 
     //Necessary 3D array for the algorithm (For the directions)
     public static int[,,] dirs = new int[4, 3, 2]
@@ -463,6 +463,8 @@ public class GameManager : MonoBehaviour
 
         return placeableCoordinates;
     }
+	
+    // End of the Check Algorithm developed by Alkım Doğan (https://github.com/doganalkim)
 
     private void TestAlgorithmForWinningConditions()
     {
