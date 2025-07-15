@@ -27,12 +27,11 @@ public class Rotate : MonoBehaviour
         // transform.RotateAround(transform.position + new Vector3(l.transform.GetWidth() / 2f, l.GetHeight() / 2f, 0f), Vector3.forward, angle);
         
         //transform.RotateAround(groupCenter, Vector3.forward, 90);
-        l.transform.Rotate(0, 0, 90);
+        l.transform.Rotate(0, 0, -90);
     }
     
     public void MirrorL()
     {
         l.transform.localScale = new Vector3(l.transform.localScale.x, -l.transform.localScale.y, l.transform.localScale.z);
-        
     }
 }
